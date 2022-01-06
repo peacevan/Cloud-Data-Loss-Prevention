@@ -53,7 +53,7 @@ function decode_base64(base64str, filename) {
         list.items.add(file);
         let myFileList = list.files[i];  
 		imagens.files=myFileList;
-	    gapi.client.setApiKey("AIzaSyCcUCyGaQNzTo4m_SQbVJFTaaZZTlZ5_wM");
+	    gapi.client.setApiKey("");
         $('#img-spinner').css("display", "block");
 		return  gapi.client.load("https://content.googleapis.com/discovery/v1/apis/dlp/v2/rest")
                  
@@ -315,8 +315,8 @@ function dataLossPrevetion(base64file){
                     {"name": "PERSON_NAME"}
 
                 ],
-                /*infoType costumizado de dicion·rio   
-                 * receber uma lista de palavras e chaves que ser· protegidas
+                /*infoType costumizado de dicion√°rio   
+                 * receber uma lista de palavras e chaves que ser√° protegidas
                  * */
                 "customInfoTypes": [
                     {
@@ -343,7 +343,7 @@ function dataLossPrevetion(base64file){
                             }
                         }
                     },
-                    //express„o regular formato 444-5-22222"
+                    //express√£o regular formato 444-5-22222"
 
                     {
                         "infoType": {
