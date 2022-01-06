@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Data Loss Prevetion</title>
+
+        <script src="https://apis.google.com/js/api.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous">
+        </script>
+    </head>
+
+    <body>
+    <center>
+        <div class="jumbotron text-center">
+            <h1>Teste</h1>
+            <p>selecione o arquivo</p>
+
+
+            <div class="row">
+                <div class="col-sm-6 div-img" width="200" height="600">
+                    <h3>Imagem atual</h3>
+                    <img src="#" id='imagem' class="thumb"></p>
+                </div>
+                <div class="col-sm-6 div-img">
+                    <h3>Imagem Editada</h3>
+                    <img src="#" id='imagemResult' class="thumb">
+                </div>
+				<div id='spinner'>div aqui
+				   <img src="http://localhost:3000/spinner.gif" alt="Minha Figura">
+				</div>
+            </div>
+            <br>
+            <input type="file" id="fileImagem"	  name="fileImagem" />
+            <br>
+            <br>
+            <br>
+        </div>
+
+        <!--https://www.html5rocks.com/pt/tutorials/file/dndfiles/-->
+        <!--<input type="file" id="files" name="files[]" multiple />
+        <output id="list"></output>
+
+        <script>
+            function handleFileSelect(evt) {
+                var files = evt.target.files; // FileList object
+                // files is a FileList of File objects. List some properties.
+                var output = [];
+                for (var i = 0, f; f = files[i]; i++) {
+                    output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                            f.size, ' bytes, ultima modificação: ',
+                            f.lastModifiedDate.toLocaleDateString(), '</li>');
+                }
+                document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+            }
+            document.getElementById('files').addEventListener('change', handleFileSelect, false);
+        </script>-->
+        <br>
+
+
+        <button onclick="loadClient()" style="margin-top: 84px;">Executar</button>
+        <style>
+            .thumb {
+                height: height: 586px;
+                width:250px;
+                border: 1px solid #000;
+                margin: 10px 5px 0 0;
+            }
+			.div-img{
+			  border: solid 1px silver;
+			   height: height: 586px;
+               width:250px;
+			  }
+        </style>
+
+        <!--
+        <output id="list"></output>
+        <script>
+          function handleFileSelect(evt) {
+            var files = evt.target.files; // FileList object
+            // Loop through the FileList and render image files as thumbnails.
+            for (var i = 0, f; f = files[i]; i++) {
+        
+              // Only process image files.
+              if (!f.type.match('image.*')) {
+                continue;
+              }
+        
+              var reader = new FileReader();
+        
+              // Closure to capture the file information.
+              reader.onload = (function(theFile) {
+                return function(e) {
+                  // Render thumbnail.
+                  var span = document.createElement('span');
+                  span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                                    '" title="', escape(theFile.name), '"/>'].join('');
+                  document.getElementById('list').insertBefore(span, null);
+                };
+              })(f);
+              // Read in the image file as a data URL.
+              reader.readAsDataURL(f);
+            }
+          }
+          document.getElementById('files').addEventListener('change', handleFileSelect, false);-->
+    </script>
+    <br>
+    <!--<button onclick="execute()">execute 2 </button>-->
+</center>
+
+
+
+
+<body>
+    <script>
+//'use strict';
+// node v8.11.3
+//const Buffer = require('buffer').Buffer;
+//const path = require('path');
+//const fs = require('fs');
+
+        function loadClient() {
+            gapi.client.setApiKey("AIzaSyCcUCyGaQNzTo4m_SQbVJFTaaZZTlZ5_wM");
+            return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/dlp/v2/rest")
+                    .then(function () {
+                        console.log("GAPI client loaded for API");
+                        execute();
+
+                    },
+                            function (err) {
+                                console.error("Error loading GAPI client for API", err);
+                            });
+        }
+        // Make sure the client is loaded before calling this method.
+        function execute() {
+
+
+            //converte o arquivo para base 64
+            base64($('input[type="file"]'), function (data) {
+                var imagem = 'data:image/jpeg;base64,' + data.base64;
+                $("#imagem").attr('src', imagem);
+                dados = {
+                    "byteItem": {
+                        "data": data.base64,
+                        "type": "IMAGE_JPEG"
+                    },
+                    "imageRedactionConfigs": [
+                        {
+                            "infoType": {
+                                "name": "PHONE_NUMBER"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "PERSON_NAME"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "MALE_NAME"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "FEMALE_NAME"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "FIRST_NAME"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "GENDER"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "LAST_NAME"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "DATE_OF_BIRTH"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "AGE"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        },
+                        {
+                            "infoType": {
+                                "name": "BRAZIL_CPF_NUMBER"
+                            },
+                            "redactionColor": {
+                                "blue": 0.98,
+                                "green": 1.0,
+                                "red": 0.96
+                            }
+                        }
+
+
+                    ],
+                    "inspectConfig": {
+                        "excludeInfoTypes": false,
+                        "infoTypes": [
+                            {"name": "AGE"},
+                            {"name": "DATE_OF_BIRTH"},
+                            {"name": "GENDER"},
+                            {"name": "LAST_NAME"},
+                            {"name": "FIRST_NAME"},
+                            {"name": "PERSON_NAME"},
+                            {"name": "FEMALE_NAME"},
+                            {"name": "MALE_NAME"},
+                            {"name": "BRAZIL_CPF_NUMBER"},
+                            {"name": "PHONE_NUMBER"},
+                            {"name": "PERSON_NAME"}
+                        ],
+                        "minLikelihood": "POSSIBLE"
+                    }
+
+                };
+                return gapi.client.dlp.projects.image.redact({
+                    "parent": "projects/maya-teste",
+                    "alt": "json",
+                    "prettyPrint": true,
+                    "resource": dados
+                       img= Eclipse-1s-200px.gif
+					    $("#spinner").attr('visibility',true);
+					   
+
+                }).then(function (response) {
+                    // Handle the results here (response.result has the parsed body).
+                    var imagem = 'data:image/jpeg;base64,' + response.result.redactedImage;
+                    $("#imagemResult").attr('src', imagem);
+					 $("#spinner").attr('visibility','false');
+                },
+                        function (err) {
+                            console.error("Execute error", err);
+                        });
+            });
+
+        }
+
+        function base64(file, callback) {
+            var coolFile = {};
+            function readerOnload(e) {
+                var base64 = btoa(e.target.result);
+                coolFile.base64 = base64;
+                callback(coolFile);
+            }
+            ;
+            var reader = new FileReader();
+            reader.onload = readerOnload;
+            var file = file[0].files[0];
+            coolFile.filetype = file.type;
+            coolFile.size = file.size;
+            coolFile.filename = file.name;
+            reader.readAsBinaryString(file);
+            //var img = $('input[type="file"]').val();
+            //$('#documento').attr('src',img);
+
+
+        }
+        ;
+        $(document).ready(function () {
+
+        });
+        gapi.load("client");
+        function result(data) {
+            return data;
+        }
+
+
+//encode_base64('ddr.jpg');
+//decode_base64('any_base64_string_goes_here', 'rane.jpg');
+		
+		
+		
+    </script>
+
